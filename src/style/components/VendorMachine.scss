@@ -304,6 +304,15 @@
       overflow: hidden;
       cursor: pointer;
 
+      .text {
+        position: relative;
+        top: -190px;
+        left: 45%;
+        transition: all 1s linear 0.1s;
+        z-index: 3;
+        color: white;
+      }
+
       .cover {
         position: relative;
         top: -80px;
@@ -313,14 +322,14 @@
         transition: all 1s linear 0.1s;
         z-index: 2;
 
-        &:hover {
+        &:hover + .text, &:hover {
           transform: rotateX(-70deg);
         }
       }
 
       .ramen {
         position: relative;
-        top: -160px;
+        top: -200px;
         left: 290px;
         width: 80px;
         height: 80px;

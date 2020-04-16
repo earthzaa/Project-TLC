@@ -6,6 +6,7 @@ class VendorMachine extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      inputString: '',
       adviseText: 'Ramen Vendor Machine !!',
       warning: false,
       selected: ['', '', ''],
@@ -115,9 +116,7 @@ class VendorMachine extends Component {
       this.setState({
         selected
       })
-    }
-
-    
+    }  
   }
 
   findGroup(name = '') {
@@ -219,6 +218,7 @@ class VendorMachine extends Component {
     return (
       <div className='drop-ramen' onMouseLeave={this.removeRamen}>
         <div className='cover'></div>
+        <h1 className='text'>PUSH</h1>
         <img 
           className={`ramen ${readyRamen ? 'visible' : 'hide'}`}
           src={ramenPic}
