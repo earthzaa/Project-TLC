@@ -127,7 +127,6 @@ class FiniteState2 extends Component {
     const size = 5
     let path = ''
     direction = direction.toLocaleLowerCase()
-    console.log(direction)
 
     switch(direction) {
       default:
@@ -144,7 +143,7 @@ class FiniteState2 extends Component {
         path = `M ${x} ${y} L ${x + size} ${y - size} L ${x + size} ${y + size}`
         break
     }
-    // return <circle cx={x} cy={y} r={4} fill='red'/>
+
     return (
       <path 
         d={path} 

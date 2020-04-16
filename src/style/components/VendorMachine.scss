@@ -6,6 +6,25 @@
   justify-content: center;
   margin: 10px;
 
+  .shake {
+    position: relative;
+    animation: shake-item 0.25s linear;
+
+    @keyframes shake-item {
+      0% {
+        left: 0;
+      }
+
+      50% {
+        left: 15px;
+      }
+
+      100% {
+        right: 30px;
+      }
+    }
+  }
+
   .machine {
     font-family: monospace;
     width: 650px;
@@ -33,6 +52,58 @@
       }
     }
 
+    .hide {
+      visibility: hidden !important;
+    }
+
+    .visible {
+      visibility: visible !important;
+    }
+
+    .selected-menu {
+      color: white;
+      background-color: red !important;
+      transition: all 0.2s linear 0.1s;
+    }
+
+    .warning-blink {
+      color: red;
+      animation: warning 1s linear 3;
+
+      @keyframes warning {
+        0% {
+          opacity: 0;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100%{
+          opacity: 0;
+        }
+      }
+    }
+
+    .success-blink {
+      color: green;
+      animation: warning 1s linear 3;
+
+      @keyframes warning {
+        0% {
+          opacity: 0;
+        }
+
+        50% {
+          opacity: 1;
+        }
+
+        100%{
+          opacity: 0;
+        }
+      }
+    }
+
     .monitor {
       margin-left: 10px;
       width: 70%;
@@ -40,9 +111,13 @@
       overflow: hidden;
 
       h1 {
-        position: relative;
+        width: 100%;
+        text-align: center;
+      }
 
-        animation: scrollText 5s ease-in-out infinite ;
+      .first-title {
+        position: relative;
+        animation: scrollText 10s ease-in-out infinite ;
 
         @keyframes scrollText {
           0% {
@@ -141,17 +216,39 @@
           justify-content: center;
           align-items: flex-end;
           width: 25%;
-          // border: 1px solid;
           margin: 0 10px 10px 10px;
           padding: 10px;
           background-color: white;
           opacity: 0.5;
 
           .img-menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100%;
             border: 1px solid;
             width: 80%;
-            background-color: antiquewhite;
+            background-color: lightyellow;
+
+            img {
+              width: 90%;
+              height: 90%;
+            }
+
+            label {
+              font-size: 14px;
+              font-weight: 800;
+              position: absolute;
+            }
+          }
+
+          .circle {
+            margin-left: 16px;
+            margin-bottom: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: green;
           }
 
           .btn {
@@ -188,7 +285,7 @@
         width: 100%;
         height: 230px;
         background-color: grey;
-        transition: all 0.5s ease-in-out;
+        transition: all 1s linear 0.1s;
         z-index: 2;
 
         &:hover {
