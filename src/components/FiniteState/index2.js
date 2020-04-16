@@ -94,8 +94,35 @@ class FiniteState2 extends Component {
     )
   }
 
-  renderEndpoint(x = 0, y = 0) {
-    return <circle cx={x} cy={y} r={4} fill='red'/>
+  renderEndpoint(x = 0, y = 0, direction = '') {
+    const size = 5
+    let path = ''
+    direction = direction.toLocaleLowerCase()
+    console.log(direction)
+
+    switch(direction) {
+      default:
+      case 'up':
+        path = `M ${x} ${y} L ${x + size} ${y + size} L ${x - size} ${y + size}`
+        break
+      case 'down':
+        path = `M ${x} ${y} L ${x + size} ${y - size} L ${x - size} ${y - size}`
+        break
+      case 'right':
+        path = `M ${x} ${y} L ${x - size} ${y + size} L ${x - size} ${y - size}`
+        break
+      case 'left':
+        path = `M ${x} ${y} L ${x + size} ${y - size} L ${x + size} ${y + size}`
+        break
+    }
+    // return <circle cx={x} cy={y} r={4} fill='red'/>
+    return (
+      <path 
+        d={path} 
+        fill='black' 
+        stroke='black'
+      />
+    )
   }
 
   renderStateMap() {
@@ -138,7 +165,7 @@ class FiniteState2 extends Component {
           <text dx={50} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#0-1'>50</textPath>
           </text>
-          {this.renderEndpoint(410, 100)}
+          {this.renderEndpoint(410, 100, 'right')}
 
           // 1-0
           <path 
@@ -150,7 +177,7 @@ class FiniteState2 extends Component {
           <text dx={120} dy={15} fill='black' stroke='black'>
             <textPath xlinkHref='#1-0'>RESET</textPath>
           </text>
-          {this.renderEndpoint(250, 65)}
+          {this.renderEndpoint(250, 60, 'down')}
 
           <circle
             id='1'
@@ -169,14 +196,14 @@ class FiniteState2 extends Component {
           // 0-2
           <path 
             id='0-2'
-            d={`M 290 100 L 410 250`}
+            d={`M 290 100 L 405 244`}
             stroke='black'
             fill='transparent'
           />
           <text dx={80} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#0-2'>40</textPath>
           </text>
-          {this.renderEndpoint(410, 250)}
+          {this.renderEndpoint(410, 243, 'right')}
 
           // 2-0
           <path 
@@ -185,10 +212,10 @@ class FiniteState2 extends Component {
             stroke='black'
             fill='transparent'
           />
-          <text dx={250} dy={-5} fill='black' stroke='black'>
+          <text dx={200} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#2-0'>RESET</textPath>
           </text>
-          {this.renderEndpoint(250, 135)}
+          {this.renderEndpoint(250, 140, 'up')}
 
           <circle
             id='2'
@@ -206,7 +233,7 @@ class FiniteState2 extends Component {
         <g> 
           // 0-3
           <path 
-            d={`M 290 100 L 410 400`}
+            d={`M 290 100 L 406 399`}
             stroke='black'
             fill='transparent'
             id='0-3'
@@ -214,7 +241,7 @@ class FiniteState2 extends Component {
           <text dx={120} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#0-3'>30</textPath>
           </text>
-          {this.renderEndpoint(410, 400)}
+          {this.renderEndpoint(410, 395, 'right')}
 
           // 3-0
           <path 
@@ -226,7 +253,6 @@ class FiniteState2 extends Component {
           <text dx={250} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#3-0'>RESET</textPath>
           </text>
-          {this.renderEndpoint(410, 100)}
 
           <circle
             id='3'
@@ -260,7 +286,7 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='2-4'
           />
-          <text dx={50} dy={-5} fill='black' stroke='black'>
+          <text dx={30} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#2-4'>15</textPath>
           </text>
 
@@ -274,7 +300,7 @@ class FiniteState2 extends Component {
           <text dx={50} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#3-4'>15</textPath>
           </text>
-          {this.renderEndpoint(610, 100)}
+          {this.renderEndpoint(610, 100, 'right')}
 
           // 4-0
           <path 
@@ -319,7 +345,7 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='2-5'
           />
-          <text dx={50} dy={-5} fill='black' stroke='black'>
+          <text dx={30} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#2-5'>10</textPath>
           </text>
 
@@ -333,7 +359,7 @@ class FiniteState2 extends Component {
           <text dx={60} dy={15} fill='black' stroke='black'>
             <textPath xlinkHref='#3-5'>10</textPath>
           </text>
-          {this.renderEndpoint(610, 250)}
+          {this.renderEndpoint(610, 250, 'right')}
 
           // 5-0
           <path 
@@ -345,7 +371,6 @@ class FiniteState2 extends Component {
           <text dx={300} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#5-0'></textPath>
           </text>
-          {this.renderEndpoint(610, 100)}
 
           <circle
             id='5'
@@ -368,7 +393,7 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='1-6'
           />
-          <text dx={50} dy={-5} fill='black' stroke='black'>
+          <text dx={50} dy={15} fill='black' stroke='black'>
             <textPath xlinkHref='#1-6'>5</textPath>
           </text>
 
@@ -393,7 +418,7 @@ class FiniteState2 extends Component {
           <text dx={50} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#3-6'>5</textPath>
           </text>
-          {this.renderEndpoint(610, 400)}
+          {this.renderEndpoint(610, 400, 'right')}
 
           // 6-0
           <path 
@@ -405,7 +430,6 @@ class FiniteState2 extends Component {
           <text dx={300} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#6-0'></textPath>
           </text>
-          {this.renderEndpoint(610, 100)}
 
           <circle
             id='6'
@@ -429,7 +453,7 @@ class FiniteState2 extends Component {
             id='4-7'
           />
           <text dx={50} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#4-7'>10</textPath>
+            <textPath xlinkHref='#4-7'>5</textPath>
           </text>
 
           // 5-7
@@ -440,7 +464,7 @@ class FiniteState2 extends Component {
             id='5-7'
           />
           <text dx={50} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#5-7'>10</textPath>
+            <textPath xlinkHref='#5-7'>5</textPath>
           </text>
 
           // 6-7
@@ -451,9 +475,9 @@ class FiniteState2 extends Component {
             id='6-7'
           />
           <text dx={50} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#6-7'>10</textPath>
+            <textPath xlinkHref='#6-7'>5</textPath>
           </text>
-          {this.renderEndpoint(810, 100)}
+          {this.renderEndpoint(810, 100, 'right')}
 
           // 7-0
           <path 
@@ -473,10 +497,10 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='7-8'
           />
-          <text dx={30} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#7-8'>20</textPath>
+          <text dx={48} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#7-8'>10</textPath>
           </text>
-          {this.renderEndpoint(870, 215)}
+          {this.renderEndpoint(870, 215, 'down')}
 
           <circle
             id='7'
@@ -510,21 +534,21 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='5-8'
           />
-          <text dx={50} dy={-5} fill='black' stroke='black'>
+          <text dx={30} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#5-8'>10</textPath>
           </text>
 
-          // 6-7
+          // 6-8
           <path 
             d={`M 690 400 L 810 250`}
             stroke='black'
             fill='transparent'
             id='6-8'
           />
-          <text dx={50} dy={-5} fill='black' stroke='black'>
+          <text dx={50} dy={15} fill='black' stroke='black'>
             <textPath xlinkHref='#6-8'>10</textPath>
           </text>
-          {this.renderEndpoint(810, 250)}
+          {this.renderEndpoint(810, 250, 'right')}
 
           // 8-0
           <path 
@@ -544,10 +568,10 @@ class FiniteState2 extends Component {
             fill='transparent'
             id='8-7'
           />
-          <text dx={30} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#8-7'>-20</textPath>
+          <text dx={10} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#8-7'>-10</textPath>
           </text>
-          {this.renderEndpoint(830, 135)}
+          {this.renderEndpoint(830, 135, 'up')}
 
           <circle
             id='8'
@@ -563,6 +587,65 @@ class FiniteState2 extends Component {
 
         //TOP-A-
         <g>
+          // 7-9
+          <path 
+            d={`M 890 90 L 1010 90`}
+            stroke='black'
+            fill='transparent'
+            id='7-9'
+          />
+          <text dx={50} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#7-9'>-5</textPath>
+          </text>
+          {this.renderEndpoint(1010, 90, 'right')}
+
+          // 9-7
+          <path 
+            d={`M 890 110 L 1010 110`}
+            stroke='black'
+            fill='transparent'
+            id='9-7'
+          />
+          <text dx={50} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#9-7'>5</textPath>
+          </text>
+          {this.renderEndpoint(890, 110, 'left')}
+
+          // 8-9
+          <path 
+            d={`M 888 233 L 1025 130`}
+            stroke='black'
+            fill='transparent'
+            id='8-9'
+          />
+          <text dx={50} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#8-9'>-10</textPath>
+          </text>
+          {this.renderEndpoint(885, 230, 'left')}
+
+          // 9-0
+          <path 
+            id='9-0'
+            d={`M 850 60 L 850 20 L 1050 20 L 1050 60`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={300} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#9-0'></textPath>
+          </text>
+
+          // 9-10
+          <path 
+            d={`M 1060 210 L 1060 138`}
+            stroke='black'
+            fill='transparent'
+            id='9-10'
+          />
+          <text dx={48} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#9-10'>-10</textPath>
+          </text>
+          {this.renderEndpoint(1060, 210, 'down')}
+
           <circle
             id='9'
             cx={1050}
@@ -574,8 +657,68 @@ class FiniteState2 extends Component {
           <text x={1050} y={105} textAnchor='middle' fill='black' stroke='black'>Top A-</text>
         </g>
 
+
         //TOP-B-
         <g>
+          // 8-10
+          <path 
+            id='8-10'
+            d={`M 890 245 L 1010 245`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={50} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#8-10'>-10</textPath>
+          </text>
+          {this.renderEndpoint(1010, 245, 'right')}
+
+          // 10-8
+          <path 
+            id='10-8'
+            d={`M 885 270 L 1015 270`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={50} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#10-8'>10</textPath>
+          </text>
+          {this.renderEndpoint(885, 270, 'left')}
+
+          // 10-7
+          <path 
+            id='10-7'
+            d={`M 885 119 L 1018 228`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={50} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#10-7'>5</textPath>
+          </text>
+          {this.renderEndpoint(882, 122, 'left')}
+
+          // 10-0
+          <path 
+            id='10-0'
+            d={`M 250 290 L 250 320 L 1050 320 L 1050 290`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={300} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#10-0'></textPath>
+          </text>
+
+          // 10-9
+          <path 
+            d={`M 1030 215 L 1030 135`}
+            stroke='black'
+            fill='transparent'
+            id='10-9'
+          />
+          <text dx={10} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#10-9'>-5</textPath>
+          </text>
+          {this.renderEndpoint(1030, 135, 'up')}
+
           <circle
             id='10'
             cx={1050}
@@ -598,7 +741,7 @@ class FiniteState2 extends Component {
             fill='transparent'
           />
           <text dx={500} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#1-11'>Submit</textPath>
+            <textPath xlinkHref='#1-11'>SUBMIT</textPath>
           </text>
 
           //4-11
@@ -622,11 +765,86 @@ class FiniteState2 extends Component {
           <text dx={300} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#7-11'></textPath>
           </text>
-          {this.renderEndpoint(1250, 60)}
 
-          {this.renderEndpoint(1210, 100)}
+          //9-11
+          <path 
+            id='9-11'
+            d={`M 1070 65 L 1070 40 L 1250 40 L 1250 60`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={300} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#9-11'></textPath>
+          </text>
+          {this.renderEndpoint(1250, 60, 'down')}
 
-          {this.renderEndpoint(1250, 140)}
+          //2-11
+          <path 
+            id='2-11'
+            d={`M 450 210 L 450 170 L 1250 170 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={750} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#2-11'>SUBMIT</textPath>
+          </text>
+
+          //5-11
+          <path 
+            id='5-11'
+            d={`M 650 210 L 650 170 L 1250 170 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={500} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#5-11'></textPath>
+          </text>
+
+          //10-11
+          <path 
+            id='10-11'
+            d={`M 1070 215 L 1070 170 L 1250 170 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={500} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#10-11'></textPath>
+          </text>
+          {/* {this.renderEndpoint(1210, 100, 'right')} */}
+
+          //3-11
+          <path 
+            id='3-11'
+            d={`M 480 425 L 480 460 L 1250 460 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={700} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#3-11'>SUBMIT</textPath>
+          </text>
+
+          //6-11
+          <path 
+            id='6-11'
+            d={`M 680 425 L 680 460 L 1250 460 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={700} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#6-11'></textPath>
+          </text>
+
+          //8-11
+          <path 
+            id='8-11'
+            d={`M 870 285 L 870 460 L 1250 460 L 1250 140`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text dx={500} dy={-5} fill='black' stroke='black'>
+            <textPath xlinkHref='#8-11'></textPath>
+          </text>
+          {this.renderEndpoint(1250, 140, 'up')}
 
           <circle
             id='11'
