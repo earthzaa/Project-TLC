@@ -2,6 +2,13 @@
   font-size: 16;
   color: black;
 
+  .state-display {
+    background-color: lightyellow;
+    margin: 30px;
+    width: 96%;
+    border: 1px solid;
+  }
+
   .display {
     display: flex;
     justify-content: center;
@@ -10,6 +17,7 @@
 
     .command {
       display: flex;
+      overflow: hidden;
       justify-content: center;
       align-items: center;
       width: 50%;
@@ -27,10 +35,30 @@
     display: flex;
     justify-content: center;
 
-    .btn-next {
+    .btn {
       padding: 10px;
       font-size: 16px;
+      margin-right: 10px;
+      background-color: lightgreen;
+      border: none;
+      transition: all 0.5s ease-in;
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+        text-decoration: underline;
+      }
+
+      &:focus {
+        outline: 0;
+      }
     } 
+
+    .btn-reset {
+      color: lightslategrey;
+      border: none;
+      background: none;
+    }
   }
 
   .node {
@@ -45,12 +73,26 @@
     animation: blink 3s ease-in-out infinite;
   }
 
+  .blinking {
+    margin-right: 10px;
+    animation: blink 2s ease-in-out infinite;
+  }
+
   @keyframes blink {
     0% {
       opacity: 1;
     }
     100% {
       opacity: 0.2;
+    }
+  }
+
+  @keyframes typing {
+    0% {
+      left: -120px;
+    }
+    100% {
+      left: 1000px;
     }
   }
 }

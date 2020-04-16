@@ -15,16 +15,16 @@ class FiniteState extends Component {
       maxState: 11,
       stateMap: [
         /* idle */ [ 0, 50, 40, 30, 0, 0, 0, 0, 0, 0, 0, 0 ],
-        /* size-l */ [ -50, 0, 0, 0, 15, 15, 15, 0, 0, 0, 0, 0 ],
-        /* size-m */ [ -40, 0, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0 ],
-        /* size-s */[ -30, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0, 0 ],
-        /* noodle-l */ [ -30, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
-        /* noodle-m */ [ 0, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
-        /* noodle-s */ [ 0, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
-        /* top-a+ */[ -10, 0, 0, 0, 0, 0, 0, 0, 10, 5, 0, 0 ],
-        /* top-b+ */ [ -10, 0, 0, 0, 0, 0, 0, -10, 0, 0, 10, 0 ],
-        /* top-a- */ [ 0, 0, 0, 0, 0, 0, 0, -5, 0, 0, -10, 0 ],
-        /* top-b- */ [ 0, 0, 0, 0, 0, 0, 0, 0, -10, 0, 0, 0 ],
+        /* size-l */ [ -1, 0, 0, 0, 15, 15, 15, 0, 0, 0, 0, 0 ],
+        /* size-m */ [ -1, 0, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0 ],
+        /* size-s */[ -1, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0, 0 ],
+        /* noodle-l */ [ -1, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
+        /* noodle-m */ [ -1, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
+        /* noodle-s */ [ -1, 0, 0, 0, 0, 0, 0, 5, 10, 0, 0, 0 ],
+        /* top-a+ */[ -1, 0, 0, 0, 0, 0, 0, 0, 10, 5, 0, 0 ],
+        /* top-b+ */ [ -1, 0, 0, 0, 0, 0, 0, -10, 0, 0, -10, 0 ],
+        /* top-a- */ [ -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+        /* top-b- */ [ -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
         /* submit */ [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ],
       colorNode: ['mediumaquamarine', 'green', 'blue', 'red', 'dodgerblue', 'blueviolet', 'deeppink', 'steelblue', 'magenta', 'darkmagenta', 'burlywood', 'black'],
@@ -79,6 +79,15 @@ class FiniteState extends Component {
           stroke={isCurrentState ? 'springgreen' : colorNode[index]}
           fill={isCurrentState ? 'springgreen' : 'white'}
         />
+        <circle
+          className={index === 11 ? '' : 'd-none'}
+          id={`node-${index}`}
+          cx={x}
+          cy={y}
+          r={30}
+          stroke={isCurrentState ? 'springgreen' : colorNode[index]}
+          fill={isCurrentState ? 'springgreen' : 'white'}
+        />
         <text 
           x={x} 
           y={y + 5} 
@@ -104,37 +113,40 @@ class FiniteState extends Component {
       if(item !== 0) {
         const factorWidth = 40
         const isCanBack = item < 0
-        const factorX = isCanBack ? 0 : factorWidth
-        const x1 = fromNode.position.x + factorX - (isCanBack ? factorWidth : 0)
+        const factorX = isCanBack ? -factorWidth : factorWidth //isCanBack ? 0 : factorWidth
+        const x1 = fromNode.position.x + factorX //- (isCanBack ? factorWidth : 0)
         const y1 = fromNode.position.y 
         const x2 = toNode.position.x - factorX
-        const y2 = toNode.position.y - (isCanBack && fromIndex%3 === 1 ? factorWidth : isCanBack ? -factorWidth : 0)
-        let xText = (x1 + x2)/2
-        let yText = (y1 + y2)/2 - 5
-        
+        const y2 = toNode.position.y //- (isCanBack && fromIndex%3 === 1 ? factorWidth : isCanBack ? -factorWidth : 0)
+        const idPath = `path-${fromIndex}-${index}`
+
         return(
           <g
             className={currentState === fromIndex ? 'selected' : ''}
             key={`transition-from-${fromIndex}-to-${index}`}
           >
-            <line
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
-              stroke={colorNode[fromIndex]}
-              markerEnd=''
+            <path 
+              id={idPath}
+              d={
+                fromIndex >= 8 ?
+                  `M ${x1} ${y1} L ${x2} ${y2}`
+                :
+                  isCanBack ? 
+                    `M ${x2} ${y2} L ${x2} ${y2 + (fromIndex%3 === 1 ? -270 : 80)} L ${x1} ${y1 + (fromIndex%3 === 1 ? -70 : 80)} L ${x1} ${y1}` 
+                    : 
+                    `M ${x1} ${y1} L ${x2} ${y2}`
+                }
+              stroke={isCanBack ? 'black' : colorNode[fromIndex]}
               fill='transparent'
             />
             <text
-              x={xText}
-              y={yText}
-              dy={fromIndex === 1 || fromIndex === 3 || fromIndex === 4 || fromIndex === 6 ? 20 : 0}
-              dx={fromIndex === 3 ? -20 : 0}
+              dx={Math.abs(x2-x1)/2}  
               stroke={colorNode[fromIndex]}
               fill={colorNode[fromIndex]}
             >
-              {`${item}`}
+              <textPath href={`#${idPath}`}>
+                {`${item}`}
+              </textPath>
             </text>
           </g>
         )
@@ -142,12 +154,9 @@ class FiniteState extends Component {
     })
   }
 
-  render() {
-    const { stateMap } = this.state
-    const init_state = getStateProperty(0)
-
-    return(
-      <div className='finite-state-machine'>
+  renderCommandGroup() {
+    return (
+      <div>
         <div className='display'>
           <div className='command'>
             <label className='selected'>SHOW STATE HERE....</label>
@@ -167,6 +176,17 @@ class FiniteState extends Component {
             Next
           </button>
         </div>
+      </div>
+    )
+  }
+
+  render() {
+    const { stateMap } = this.state
+    const init_state = getStateProperty(0)
+
+    return(
+      <div className='finite-state-machine'>
+        {this.renderCommandGroup()}
         <div name='graph-map'>
           <svg 
             className='state-map'

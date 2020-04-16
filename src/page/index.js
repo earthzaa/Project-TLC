@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import FiniteState from '../components/FiniteState'
+import FiniteState from '../components/FiniteState/index2'
 import VendorMachine from '../components/VendorMachine'
 
 class Index extends Component {

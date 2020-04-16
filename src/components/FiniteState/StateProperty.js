@@ -1,7 +1,7 @@
 const cal_pos = (tier = 0, level = 0) => {
   const init_pos = {
     x: 150,
-    y: 50
+    y: 100
   }
   const factor_pos = {
     x: 210,
