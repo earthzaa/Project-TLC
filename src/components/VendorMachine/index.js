@@ -161,8 +161,11 @@ class VendorMachine extends Component {
             </div>
           </div>
           <div className='exchange'>
-            <div className={submit ? 'selected-menu' : ''} onClick={this.toggleSubmit}>Money</div>
-            <div>Change</div>
+            <div className={`primary ${submit ? 'selected-menu' : ''}`} onClick={this.toggleSubmit}>Pay</div>
+            <div className='primary'>Change</div>
+            <div className='secondary' onClick={this.resetMachine}>
+              <div>reset</div>
+            </div>
           </div>
         </div>
       </div>
