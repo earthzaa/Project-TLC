@@ -94,6 +94,35 @@ class FiniteState2 extends Component {
     )
   }
 
+  renderLegend() {
+    const x = 10
+    const y = 230
+    const width = 200
+    const height = 250
+
+    return (
+      <g>
+        // REACT_ANGLE
+        <rect x={x} y={y} width={width} height={height} fill='transparent' stroke='blue'/>
+        // TITLE
+        <text x={x + width/2 - 35} y={y + 30} fontSize={24} stroke='blue' fill='blue'>Legend</text>
+
+        // CURRENT_STATE
+        <circle className='selected' cx={x + 40} cy={y + height/2 - 40} r={30} fill='lightgreen' stroke='lightgreen'/>
+        <text x={x + 90} y={y + height/2 - 35} fontSize={12} stroke='black' fill='black'>CURRENT_STATE</text>
+
+        // STATE
+        <circle cx={x + 40} cy={y + height/2 + 35} r={30} fill='transparent' stroke='black'/>
+        <text x={x + 90} y={y + height/2 + 40} fontSize={12} stroke='black' fill='black'>STATE</text>
+
+        // TRANSITION
+        <line x1={x + 10} y1={y + height/2 + 90} x2={x + 70} y2={y + height/2 + 90} stroke='black' />
+        {this.renderEndpoint(x + 70, y + height/2 + 90, 'right')}
+        <text x={x + 90} y={y + height/2 + 93} fontSize={12} stroke='black' fill='black'>TRANSITION</text>
+      </g>
+    )
+  }
+
   renderEndpoint(x = 0, y = 0, direction = '') {
     const size = 5
     let path = ''
@@ -133,6 +162,8 @@ class FiniteState2 extends Component {
         width={1300}
         height={500}
       >
+        {this.renderLegend()}
+        
         // IDLE
         <g> 
           // INIT LINE
