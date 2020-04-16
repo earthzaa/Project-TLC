@@ -33,7 +33,7 @@ class FiniteState2 extends Component {
 
     if(target) {
       target.setAttribute('class', 'selected')
-      target.attributes.stroke.value = 'lightgreen'
+      target.attributes.stroke.value = 'black'
       target.attributes.fill.value = 'lightgreen'
     } 
   }
@@ -108,7 +108,7 @@ class FiniteState2 extends Component {
         <text x={x + width/2 - 35} y={y + 30} fontSize={24} stroke='blue' fill='blue'>Legend</text>
 
         // CURRENT_STATE
-        <circle className='selected' cx={x + 40} cy={y + height/2 - 40} r={30} fill='lightgreen' stroke='lightgreen'/>
+        <circle className='selected' cx={x + 40} cy={y + height/2 - 40} r={30} fill='lightgreen' stroke='black'/>
         <text x={x + 90} y={y + height/2 - 35} fontSize={12} stroke='black' fill='black'>CURRENT_STATE</text>
 
         // STATE
@@ -171,11 +171,26 @@ class FiniteState2 extends Component {
             stroke='black'
             fill='transparent'
           />
+          <path
+            d={`M 235 65 C 200 20, 160 40, 208, 88`}
+            stroke='black'
+            fill='transparent'
+          />
+          <text x={160} y={35} stroke='black' fill='black'>RESET</text>
+          {this.renderEndpoint(210, 85, 'right')}
           <circle
             id='0'
             cx={250}
             cy={100}
             r={rC}
+            fill='transparent'
+            stroke='black'
+          />
+          <circle
+            id='0'
+            cx={250}
+            cy={100}
+            r={rC - 6}
             fill='transparent'
             stroke='black'
           />
