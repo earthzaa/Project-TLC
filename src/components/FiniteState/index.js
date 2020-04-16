@@ -150,7 +150,7 @@ class FiniteState extends Component {
       <div className='finite-state-machine'>
         <div className='display'>
           <div className='command'>
-            <label className='selected'>Show State here....</label>
+            <label className='selected'>SHOW STATE HERE....</label>
           </div>
         </div>
         <div className='btn-group'>

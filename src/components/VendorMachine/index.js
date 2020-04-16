@@ -116,7 +116,11 @@ class VendorMachine extends Component {
   renderDropRamen() {
     return (
       <div className='drop-ramen'>
-
+        <div className='cover'></div>
+        <img 
+          className='ramen' 
+          src={require('../../static/images/ramen.png')}
+        />
       </div>
     )
   }
