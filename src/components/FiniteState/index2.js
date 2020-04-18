@@ -9,7 +9,8 @@ class FiniteState2 extends Component {
       prevState: null,
       pointer: 0,
       currentState: 0,
-      isPlaying: false
+      isPlaying: false,
+      isStop: false
     }
 
     this.updateCurrentState = this.updateCurrentState.bind(this)
@@ -19,6 +20,7 @@ class FiniteState2 extends Component {
     this.printState = this.printState.bind(this)
     this.translateToState = this.translateToState.bind(this)
     this.autoPlayState = this.autoPlayState.bind(this)
+    this.hasStop = this.hasStop.bind(this)
   }
 
   componentDidMount() {
@@ -67,20 +69,26 @@ class FiniteState2 extends Component {
 
   autoPlayState() {
     const { input } = this.props
-    let { pointer } = this.state
+    const { pointer, currentState, isPlaying } = this.state
     const maxPointer = input.length
 
-    this.resetState()
-    this.setState({
-      isPlaying: true
-    }, () => this.stepAutoPlay(pointer, maxPointer))
+    if(currentState === 11 || (!isPlaying && currentState !== 0)) {
+      this.resetState()
+    }
+    else {
+      this.setState({
+        isPlaying: true
+      }, () => this.stepAutoPlay(pointer, maxPointer))
+    }
   }
 
   stepAutoPlay(pointer = 0, maxPointer = 1) {
     if(pointer < maxPointer) {
       setTimeout(() => {
         const { input } = this.props
-        if(input.find((item) => item.toLowerCase() === 'submit')) {
+        const { isStop } = this.state
+
+        if(input.find((item) => item.toLowerCase() === 'submit') && !isStop) {
           this.nextState()
           this.stepAutoPlay(pointer + 1, maxPointer)
         }
@@ -103,12 +111,20 @@ class FiniteState2 extends Component {
       target.attributes.stroke.value = 'black'
       target.attributes.fill.value = 'transparent'
     } 
+
     this.setState({
       prevState: null,
       pointer: 0,
       currentState: 0,
-      isPlaying: false
+      isPlaying: false,
+      isStop: false
     }, this.updateCurrentState)
+  }
+
+  hasStop() {
+    this.setState({
+      isStop: true
+    })
   }
 
   printState() {
@@ -160,7 +176,7 @@ class FiniteState2 extends Component {
   }
 
   renderCommandGroup() {
-    const { isPlaying, pointer } = this.state
+    const { isPlaying, currentState, isStop } = this.state
 
     return (
       <div>
@@ -176,29 +192,24 @@ class FiniteState2 extends Component {
         </div>
         <div className='btn-group'>
           <button 
-            className='btn btn-reset'
-            onClick={this.resetState}
-          >
-            Back to Initial State
-          </button>
-          <button 
-            className='btn'
-            onClick={this.nextState}
-          >
-            Next
-          </button>
-          <button 
             className='btn btn-auto-play'
-            onClick={this.autoPlayState}
+            onClick={!isPlaying ? this.autoPlayState : ''}
           >
             {
-              isPlaying ? 'Playing...' 
+              isPlaying ? 
+              'Playing...' 
             : 
-              pointer === 0 ?
+              currentState === 0 ?
               'Auto Play'
               :
               'Start Again'
             }
+          </button>
+          <button 
+            className='btn'
+            onClick={!isPlaying ? this.nextState : this.hasStop}
+          >
+            { isPlaying ? isStop ? 'Wait...' : 'Stop' : 'Next'}
           </button>
         </div>
       </div>

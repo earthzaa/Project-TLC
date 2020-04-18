@@ -47,18 +47,18 @@
 
     .guide {
       width: 30%;
-      height: 160px;
+      height: 200px;
       padding: 10px;
 
       h3 {
-        margin: 5px 0 10px 0;
+        margin: 5px 0 20px 0;
       }
 
       div {
         margin-top: 10px;
 
         &:last-child {
-          margin-top: 15px !important;
+          margin-top: 25px !important;
         }
       }
     }
@@ -124,12 +124,18 @@
     .monitor {
       margin-left: 10px;
       width: 70%;
-      height: 180px;
+      height: 220px;
       overflow: hidden;
 
-      h1 {
+      .monitor-text {
+        padding: 30px 0 30px 0;
+        margin: 0;
         width: 100%;
         text-align: center;
+
+        .inside-text {
+          height: 50px;
+        }
       }
 
       .first-title {

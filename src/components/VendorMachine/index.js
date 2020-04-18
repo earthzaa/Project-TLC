@@ -27,7 +27,9 @@ class VendorMachine extends Component {
         ]
       ],
       isReadyRamen: false,
-      submit: false
+      submit: false,
+      totalPrice: 0,
+      receiveMoney: 0
     }
 
     this.onSelectedMenu= this.onSelectedMenu.bind(this)
@@ -38,10 +40,11 @@ class VendorMachine extends Component {
     this.resetMachine = this.resetMachine.bind(this)
     this.prepareRamen = this.prepareRamen.bind(this)
     this.removeRamen = this.removeRamen.bind(this)
-    this.onWarning = this.onWarning.bind(this)
+    this.resetWarning = this.resetWarning.bind(this)
     this.hadSelectedMenu = this.hadSelectedMenu.bind(this)
     this.pushInputString = this.pushInputString.bind(this)
     this.__onClickReset = this.__onClickReset.bind(this)
+    this.__onChangeMoney = this.__onChangeMoney.bind(this)
   }
 
   resetMachine() {
@@ -52,23 +55,27 @@ class VendorMachine extends Component {
       selected: ['', '', ['', '']],
       submit: false,
       warning: false,
+      totalPrice: 0,
+      receiveMoney: 0,
       inputString: submit ? [] : inputString
     })
   }
 
   validateMenu() {
-    const { selected } = this.state
+    const { selected, receiveMoney, totalPrice } = this.state
+    const isEnough = receiveMoney >= totalPrice
+    const isComplete = selected.filter((item) => item === '').length === 0
 
-    if(selected.filter((item) => item === '').length === 0) {
+    if(isComplete && isEnough) {
       this.setState({
         submit: true
       }, this.prepareRamen)
     }
     else {
       this.setState({
-        adviseText: 'Following Guide !!',
+        adviseText: !isEnough && isComplete ? 'Money is not enough' : 'Following Guide !!',
         warning: true
-      }, this.onWarning)
+      }, this.resetWarning)
     }
   }
 
@@ -85,7 +92,7 @@ class VendorMachine extends Component {
     }
   }
 
-  onWarning() {
+  resetWarning() {
     setTimeout(() => {
       this.setState({
         adviseText: 'Ramen Vendor Machine !!',
@@ -154,9 +161,10 @@ class VendorMachine extends Component {
 
       this.pushInputString(value)
 
-      this.setState({
-        selected
-      })
+      this.setState((prevState) => ({
+        selected,
+        totalPrice: prevState.totalPrice + this.toPrice(value)
+      }))
     }
   }
 
@@ -177,45 +185,81 @@ class VendorMachine extends Component {
     }, () => this.props.onChange(inputString))
   }
 
+  toPrice(value = '') {
+    value = value.toLowerCase()
+
+    switch(value) {
+      default:
+      case 'reset': return 0
+      case 'submit': return 0
+      case 'size-l': return 50
+      case 'size-m': return 40
+      case 'size-s': return 30
+      case 'noodle-l': return 15
+      case 'noodle-m': return 10
+      case 'noodle-s': return 5
+      case 'top a': return 5
+      case 'top b': return 10
+      case 'top a-': return -5
+      case 'top b-': return -10
+    }
+  }
+
+  __onChangeMoney(price = 0) {
+    let { receiveMoney } = this.state
+
+    receiveMoney += price
+    this.setState({
+      receiveMoney
+    })
+  }
+
   renderSystemGuide() {
     return (
       <div className='guide glass'>
         <h3 className='w-100 text-center'>SYSTEM GUIDE</h3>
         <div>Step 1: Soup</div>
         <div>Step 2: Noodle</div>
-        <div>Step * : Toping</div>
-        <div>Step 3: Pay</div>
+        <div>Step *: Toping</div>
+        <div>Step 3: Insert Money</div>
+        <div>Step 4: Pay</div>
         <div>* optional, can skip</div>
       </div>
     )
   }
 
   renderMonitor() {
-    const { submit, adviseText, warning } = this.state
+    const { submit, adviseText, warning, selected, totalPrice, receiveMoney } = this.state
 
     return (
       <div className='monitor glass'>
         <h1 
-        className={`w-100 ${submit ? 
-          'success-blink' 
-          : 
-          warning ? 'warning-blink' 
-          : 'first-title'}`}
-        >
-          {adviseText}
+          className={`w-100 monitor-text ${submit ? 
+            'success-blink' 
+            : 
+            selected[0] !== '' && !warning ?
+              ''
+            :
+              warning ? 'warning-blink' 
+              : 'first-title' }
+        `}>
+          <div className='inside-text'>
+            <div>{selected[0] === '' || warning || submit ? adviseText : `Total: ${totalPrice} Bath`}</div>
+            <div>{selected[0] !== '' && !warning && !submit ? `Insert: ${receiveMoney} Bath` : ''}</div>
+          </div>
         </h1>
         <div className='console'>
           <div className='payment'>
             <div className='money'>
-              <div>20</div>
-              <div>50</div>
+              <div onClick={() => this.__onChangeMoney(5)}>5</div>
+              <div onClick={() => this.__onChangeMoney(10)}>10</div>
             </div>
             <div className='money'>
-              <div>100</div>
-              <div>500</div>
+              <div onClick={() => this.__onChangeMoney(20)}>20</div>
+              <div onClick={() => this.__onChangeMoney(50)}>50</div>
             </div>
             <div className='money'>
-              <div>1000</div>
+              <div onClick={() => this.__onChangeMoney(100)}>100</div>
             </div>
           </div>
           <div className='exchange'>

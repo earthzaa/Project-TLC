@@ -18,6 +18,7 @@
       padding: 10px;
       font-size: 16px;
       margin-right: 10px;
+      font-weight: 500;
       background-color: lightgreen;
       border: none;
       transition: all 0.5s ease-in;
@@ -40,8 +41,9 @@
     }
 
     .btn-auto-play {
+      color: white;
       border: none;
-      background-color: skyblue;
+      background-color: lightcoral;
     }
   }
 
