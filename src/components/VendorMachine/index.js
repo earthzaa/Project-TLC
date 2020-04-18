@@ -6,10 +6,10 @@ class VendorMachine extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inputString: '',
+      inputString: [],
       adviseText: 'Ramen Vendor Machine !!',
       warning: false,
-      selected: ['', '', ''],
+      selected: [ '', '', ['', ''] ],
       stepMenu: [
         [
           { menu: 'Size-L', pic: ramenPic },
@@ -26,59 +26,66 @@ class VendorMachine extends Component {
           { menu: 'Top B', pic: ramenPic }
         ]
       ],
-      readyRamen: false,
+      isReadyRamen: false,
       submit: false
     }
 
-    this.menuSelected= this.menuSelected.bind(this)
+    this.onSelectedMenu= this.onSelectedMenu.bind(this)
     this.renderMonitor = this.renderMonitor.bind(this)
     this.renderStep = this.renderStep.bind(this)
     this.renderSubStep = this.renderSubStep.bind(this)
-    this.toggleSubmit = this.toggleSubmit.bind(this)
+    this.validateMenu = this.validateMenu.bind(this)
     this.resetMachine = this.resetMachine.bind(this)
-    this.generateRamen = this.generateRamen.bind(this)
+    this.prepareRamen = this.prepareRamen.bind(this)
     this.removeRamen = this.removeRamen.bind(this)
-    this.setTimeWarning = this.setTimeWarning.bind(this)
+    this.onWarning = this.onWarning.bind(this)
+    this.hadSelectedMenu = this.hadSelectedMenu.bind(this)
+    this.pushInputString = this.pushInputString.bind(this)
+    this.__onClickReset = this.__onClickReset.bind(this)
   }
 
   resetMachine() {
+    const { submit, inputString } = this.state
+
     this.setState({
       adviseText: 'Ramen Vendor Machine !!',
-      selected: ['', '', ''],
+      selected: ['', '', ['', '']],
       submit: false,
-      warning: false
+      warning: false,
+      inputString: submit ? [] : inputString
     })
   }
 
-  toggleSubmit() {
+  validateMenu() {
     const { selected } = this.state
 
     if(selected.filter((item) => item === '').length === 0) {
-      this.setState((prevState) => ({
-        submit: !prevState.submit
-      }), this.generateRamen)
+      this.setState({
+        submit: true
+      }, this.prepareRamen)
     }
     else {
       this.setState({
         adviseText: 'Following Guide !!',
         warning: true
-      }, this.setTimeWarning)
+      }, this.onWarning)
     }
   }
 
-  generateRamen() {
+  prepareRamen() {
     const { submit } = this.state
     
     if(submit) {
+      this.pushInputString('Submit')
       this.setState({
-        readyRamen: true,
+        isReadyRamen: true,
         adviseText: 'Pick up Ramen !!'
       })
       setTimeout(this.resetMachine, 3500)
     }
   }
 
-  setTimeWarning() {
+  onWarning() {
     setTimeout(() => {
       this.setState({
         adviseText: 'Ramen Vendor Machine !!',
@@ -89,42 +96,89 @@ class VendorMachine extends Component {
 
   removeRamen() {
     this.setState({
-      readyRamen: false
+      isReadyRamen: false
     })
   }
 
-  menuSelected(event) {
+  __onClickReset() {
+    const { inputString } = this.state
+    let findSubmit = false
+
+    try{
+      findSubmit = inputString[inputString.length - 1].toLowerCase()
+    }
+    catch(error){
+
+    }
+
+    if(findSubmit === 'submit') {
+      this.setState({
+        inputString: []
+      },() => this.props.onChange([]))
+    }
+    else {
+      if(inputString.length === 0) this.props.onChange(['Reset'])
+      else this.pushInputString('Reset')
+    }
+
+    this.resetMachine()
+  }
+
+  onSelectedMenu(event) {
     const { id } = event.target
     let { selected } = this.state
     const group = this.findGroup(id)
 
     if(group > 0) {
       if(selected[group - 1] === '') {
-        this.toggleSubmit()
+        this.validateMenu()
       }
       else {
-        selected[group] = id
-
-        this.setState({
-          selected
-        })
+        this.hadSelectedMenu(group, id)
       }
     }
     else {
-      selected[group] = id
-      
-      this.setState({
-        selected
-      })
+      this.hadSelectedMenu(group, id)
     }  
   }
 
+  hadSelectedMenu(groupMenu = 0, value = '') {
+    let { selected } = this.state
+    const { stepMenu } = this.state
+
+    if(selected[groupMenu] === '' || groupMenu === 2) {
+      if(groupMenu < 2) selected[groupMenu] = value
+      else {
+        const subGroup = stepMenu[groupMenu].findIndex((item) => item.menu.toLowerCase() === value.toLowerCase())
+        const targetArr = selected[groupMenu][subGroup]
+        selected[groupMenu][subGroup] = targetArr !== '' ? '' : value
+
+        if(targetArr !== '') value += '-'
+      }
+
+      this.pushInputString(value)
+
+      this.setState({
+        selected
+      })
+    }
+  }
+
   findGroup(name = '') {
-    name = name.toLocaleLowerCase()
+    name = name.toLowerCase()
 
     if(name.includes('size')) return 0
     else if(name.includes('noodle')) return 1
     else if(name.includes('top')) return 2
+  }
+
+  pushInputString(value = '') {
+    let { inputString } = this.state
+    inputString.push(value)
+
+    this.setState({
+      inputString
+    }, () => this.props.onChange(inputString))
   }
 
   renderSystemGuide() {
@@ -133,8 +187,9 @@ class VendorMachine extends Component {
         <h3 className='w-100 text-center'>SYSTEM GUIDE</h3>
         <div>Step 1: Soup</div>
         <div>Step 2: Noodle</div>
-        <div>Step 3: Toping</div>
-        <div>Step 4: Pay</div>
+        <div>Step * : Toping</div>
+        <div>Step 3: Pay</div>
+        <div>* optional, can skip</div>
       </div>
     )
   }
@@ -144,7 +199,15 @@ class VendorMachine extends Component {
 
     return (
       <div className='monitor glass'>
-        <h1 className={`w-100 ${submit ? 'success-blink' : warning ? 'warning-blink' : 'first-title'}`}>{adviseText}</h1>
+        <h1 
+        className={`w-100 ${submit ? 
+          'success-blink' 
+          : 
+          warning ? 'warning-blink' 
+          : 'first-title'}`}
+        >
+          {adviseText}
+        </h1>
         <div className='console'>
           <div className='payment'>
             <div className='money'>
@@ -160,9 +223,9 @@ class VendorMachine extends Component {
             </div>
           </div>
           <div className='exchange'>
-            <div className={`primary ${submit ? 'selected-menu' : ''}`} onClick={this.toggleSubmit}>Pay</div>
+            <div className={`primary ${submit && 'selected-menu'}`} onClick={this.validateMenu}>Pay</div>
             <div className='primary'>Change</div>
-            <div className='secondary' onClick={this.resetMachine}>
+            <div className='secondary' onClick={this.__onClickReset}>
               <div>reset</div>
             </div>
           </div>
@@ -183,15 +246,20 @@ class VendorMachine extends Component {
 
   renderSubStep(groupMenu = [], index = 0) {
     const { selected } = this.state
+    const activeTitleStatus = (index < 2 && selected[index].length !== 0) || (index === 2 && selected[index].filter((item) => (item !== '')).length > 0)
 
     return (
       <div className='step' key={`Step-${index}`}>
-        <div className={`title ${selected[index] !== '' ? 'selected-menu' : ''}`}>
+        <div 
+          className={`title 
+            ${activeTitleStatus && 'selected-menu' }
+          `}>
           <h2>{`Step ${index + 1}`}</h2>
         </div>
         <div className='menu'>{
-          groupMenu.map((item) => {
+          groupMenu.map((item, itemIndex) => {
             const { menu, pic } = item
+            const activeMenuStatus = (index < 2 && selected[index] === menu) || (index === 2 && selected[index][itemIndex] === menu)
 
             return (
               <div className='sub-menu' key={menu}>
@@ -200,8 +268,9 @@ class VendorMachine extends Component {
                   <label>{menu}</label>
                 </div>
                 <div>
-                  <div className={`circle ${selected[index] === menu ? 'selected-menu' : ''}`}></div>
-                  <div className='btn' id={menu} onClick={this.menuSelected}></div>
+                  <div 
+                    className={`circle ${ activeMenuStatus && 'selected-menu'}`}></div>
+                  <div className={`btn ${index === 2 && 'hover-red'} ${activeMenuStatus ? 'selected-menu' : (!activeTitleStatus || index === 2) && 'hover-red'}`} id={menu} onClick={this.onSelectedMenu}></div>
                 </div>
               </div>
             )
@@ -213,14 +282,14 @@ class VendorMachine extends Component {
   }
 
   renderDropRamen() {
-    const { readyRamen } = this.state
+    const { isReadyRamen } = this.state
 
     return (
       <div className='drop-ramen' onMouseLeave={this.removeRamen}>
         <div className='cover'></div>
         <h1 className='text'>PUSH</h1>
         <img 
-          className={`ramen ${readyRamen ? 'visible' : 'hide'}`}
+          className={`ramen ${isReadyRamen ? 'visible' : 'hide'}`}
           src={ramenPic}
         />
       </div>

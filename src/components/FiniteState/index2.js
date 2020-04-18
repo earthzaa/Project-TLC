@@ -7,13 +7,16 @@ class FiniteState2 extends Component {
     super(props)
     this.state = {
       prevState: null,
-      currentState: 0,
-      maxState: 11
+      pointer: 0,
+      currentState: 0
     }
 
     this.updateCurrentState = this.updateCurrentState.bind(this)
     this.nextState = this.nextState.bind(this)
     this.resetState = this.resetState.bind(this)
+    this.translateToDFA = this.translateToDFA.bind(this)
+    this.printState = this.printState.bind(this)
+    this.translateToState = this.translateToState.bind(this)
   }
 
   componentDidMount() {
@@ -39,13 +42,64 @@ class FiniteState2 extends Component {
   }
 
   nextState() {
-    const { maxState, currentState } = this.state
+    const { pointer } = this.state
+    const { input } = this.props
+    const maxPointer = input.length
 
-    if(currentState < maxState) {
+    if(pointer < maxPointer) {
+      const state = this.translateToState(input[pointer])
+
       this.setState((prevState) => ({
         prevState: prevState.currentState,
-        currentState: prevState.currentState + 1
+        currentState: state,
+        pointer: prevState.pointer + 1
       }), this.updateCurrentState)
+    }
+  }
+
+  printState() {
+    const { input } = this.props
+
+    return input.map((item, index) => this.translateToDFA(item) + (index < input.length - 1 ? ', ' : ''))
+  }
+
+  translateToDFA(value = '') {
+    value = value.toLowerCase()
+
+    switch(value) {
+      default:
+      case 'reset': return 'Reset'
+      case 'submit': return 'Submit'
+      case 'size-l': return 50
+      case 'size-m': return 40
+      case 'size-s': return 30
+      case 'noodle-l': return 15
+      case 'noodle-m': return 10
+      case 'noodle-s': return 5
+      case 'top a': return 5
+      case 'top b': return 10
+      case 'top a-': return -5
+      case 'top b-': return -10
+    }
+  }
+
+  translateToState(value = '') {
+    value = value.toLowerCase()
+
+    switch(value) {
+      default:
+      case 'reset': return 0
+      case 'submit': return 11
+      case 'size-l': return 1
+      case 'size-m': return 2
+      case 'size-s': return 3
+      case 'noodle-l': return 4
+      case 'noodle-m': return 5
+      case 'noodle-s': return 6
+      case 'top a': return 7
+      case 'top b': return 8
+      case 'top a-': return 9
+      case 'top b-': return 10
     }
   }
 
@@ -69,9 +123,10 @@ class FiniteState2 extends Component {
       <div>
         <div className='display'>
           <div className='command'>
-            <div className='text'>
+            <h3>DFA: </h3>
+            <div className='show-text'>
               <label> > </label>
-              <label>SHOW STATE HERE....</label>
+              <label>{this.printState()}</label>
               <label className='blinking'>| </label>
             </div>
           </div>
@@ -778,7 +833,7 @@ class FiniteState2 extends Component {
 
         //SUBMIT
         <g>
-          //1-11
+          {/* //1-11
           <path 
             id='1-11'
             d={`M 470 65 L 470 40 L 1250 40 L 1250 60`}
@@ -787,7 +842,7 @@ class FiniteState2 extends Component {
           />
           <text dx={500} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#1-11'>SUBMIT</textPath>
-          </text>
+          </text> */}
 
           //4-11
           <path 
@@ -797,7 +852,7 @@ class FiniteState2 extends Component {
             fill='transparent'
           />
           <text dx={300} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#4-11'></textPath>
+            <textPath xlinkHref='#4-11'>Submit</textPath>
           </text>
 
           //7-11
@@ -823,7 +878,7 @@ class FiniteState2 extends Component {
           </text>
           {this.renderEndpoint(1250, 60, 'down')}
 
-          //2-11
+          {/* //2-11
           <path 
             id='2-11'
             d={`M 450 210 L 450 170 L 1250 170 L 1250 140`}
@@ -832,7 +887,7 @@ class FiniteState2 extends Component {
           />
           <text dx={750} dy={-5} fill='black' stroke='black'>
             <textPath xlinkHref='#2-11'>SUBMIT</textPath>
-          </text>
+          </text> */}
 
           //5-11
           <path 
@@ -842,7 +897,7 @@ class FiniteState2 extends Component {
             fill='transparent'
           />
           <text dx={500} dy={-5} fill='black' stroke='black'>
-            <textPath xlinkHref='#5-11'></textPath>
+            <textPath xlinkHref='#5-11'>Submit</textPath>
           </text>
 
           //10-11
@@ -857,7 +912,7 @@ class FiniteState2 extends Component {
           </text>
           {/* {this.renderEndpoint(1210, 100, 'right')} */}
 
-          //3-11
+          {/* //3-11
           <path 
             id='3-11'
             d={`M 480 425 L 480 460 L 1250 460 L 1250 140`}
@@ -866,7 +921,7 @@ class FiniteState2 extends Component {
           />
           <text dx={700} dy={15} fill='black' stroke='black'>
             <textPath xlinkHref='#3-11'>SUBMIT</textPath>
-          </text>
+          </text> */}
 
           //6-11
           <path 
@@ -875,8 +930,8 @@ class FiniteState2 extends Component {
             stroke='black'
             fill='transparent'
           />
-          <text dx={700} dy={15} fill='black' stroke='black'>
-            <textPath xlinkHref='#6-11'></textPath>
+          <text dx={400} dy={15} fill='black' stroke='black'>
+            <textPath xlinkHref='#6-11'>Submit</textPath>
           </text>
 
           //8-11

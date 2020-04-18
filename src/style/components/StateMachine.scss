@@ -9,28 +9,6 @@
     border: 1px solid;
   }
 
-  .display {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    color: black;
-
-    .command {
-      display: flex;
-      overflow: hidden;
-      justify-content: center;
-      align-items: center;
-      width: 750px;
-      height: 100px;
-      border: 1px solid grey;
-      background-color: black;
-      color: limegreen;
-      font-family: monospace;
-      font-size: 30px;
-      font-weight: 800;
-    }
-  }
-
   .btn-group {
     margin: 10px;
     display: flex;
@@ -72,11 +50,9 @@
 
   .selected {
     animation: blink 3s ease-in-out infinite;
-  }
-
-  .blinking {
-    margin-right: 10px;
-    animation: blink 1s ease-in-out infinite;
+    -webkit-animation: blink 3s ease-in-out infinite;
+    -moz-animation: blink 3s ease-in-out infinite;
+    -o-animation: blink 3s ease-in-out infinite;
   }
 
   @keyframes blink {
