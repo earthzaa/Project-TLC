@@ -114,6 +114,7 @@ class FiniteState2 extends Component {
     } 
     this.setState({
       prevState: null,
+      pointer: 0,
       currentState: 0
     }, this.updateCurrentState)
   }
