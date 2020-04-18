@@ -111,15 +111,11 @@ class VendorMachine extends Component {
 
     }
 
-    if(findSubmit === 'submit') {
-      this.setState({
-        inputString: []
-      },() => this.props.onChange([]))
+    if(inputString.length === 0) {
+      this.props.onChange(['Reset'])
+      this.props.reset()
     }
-    else {
-      if(inputString.length === 0) this.props.onChange(['Reset'])
-      else this.pushInputString('Reset')
-    }
+    else this.pushInputString('Reset')
 
     this.resetMachine()
   }

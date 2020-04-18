@@ -8,7 +8,8 @@ class FiniteState2 extends Component {
     this.state = {
       prevState: null,
       pointer: 0,
-      currentState: 0
+      currentState: 0,
+      isPlaying: false
     }
 
     this.updateCurrentState = this.updateCurrentState.bind(this)
@@ -17,10 +18,16 @@ class FiniteState2 extends Component {
     this.translateToDFA = this.translateToDFA.bind(this)
     this.printState = this.printState.bind(this)
     this.translateToState = this.translateToState.bind(this)
+    this.autoPlayState = this.autoPlayState.bind(this)
   }
 
   componentDidMount() {
     this.updateCurrentState()
+    this.props.fReset(this.resetState)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.input.length === 1) this.resetState()
   }
 
   updateCurrentState() {
@@ -45,8 +52,9 @@ class FiniteState2 extends Component {
     const { pointer } = this.state
     const { input } = this.props
     const maxPointer = input.length
+    const isSubmit = input.find((item) => item.toLowerCase() === 'submit')
 
-    if(pointer < maxPointer) {
+    if(pointer < maxPointer && isSubmit) {
       const state = this.translateToState(input[pointer])
 
       this.setState((prevState) => ({
@@ -57,10 +65,58 @@ class FiniteState2 extends Component {
     }
   }
 
+  autoPlayState() {
+    const { input } = this.props
+    let { pointer } = this.state
+    const maxPointer = input.length
+
+    this.resetState()
+    this.setState({
+      isPlaying: true
+    }, () => this.stepAutoPlay(pointer, maxPointer))
+  }
+
+  stepAutoPlay(pointer = 0, maxPointer = 1) {
+    if(pointer < maxPointer) {
+      setTimeout(() => {
+        const { input } = this.props
+        if(input.find((item) => item.toLowerCase() === 'submit')) {
+          this.nextState()
+          this.stepAutoPlay(pointer + 1, maxPointer)
+        }
+        else this.resetState()
+      }, 3500)
+    }
+    else {
+      this.setState({
+        isPlaying: false
+      })
+    }
+  }
+
+  resetState() {
+    const { currentState } = this.state
+    let target = document.getElementById(currentState)
+
+    if(target) {
+      target.setAttribute('class', '')
+      target.attributes.stroke.value = 'black'
+      target.attributes.fill.value = 'transparent'
+    } 
+    this.setState({
+      prevState: null,
+      pointer: 0,
+      currentState: 0,
+      isPlaying: false
+    }, this.updateCurrentState)
+  }
+
   printState() {
     const { input } = this.props
+    const hasSubmit = input.find((item) => item.toLowerCase() === 'submit')
 
-    return input.map((item, index) => this.translateToDFA(item) + (index < input.length - 1 ? ', ' : ''))
+    if(!hasSubmit) return ''
+    else return input.map((item, index) => this.translateToDFA(item) + (index < input.length - 1 ? ', ' : ''))
   }
 
   translateToDFA(value = '') {
@@ -103,23 +159,9 @@ class FiniteState2 extends Component {
     }
   }
 
-  resetState() {
-    const { currentState } = this.state
-    let target = document.getElementById(currentState)
-
-    if(target) {
-      target.setAttribute('class', '')
-      target.attributes.stroke.value = 'black'
-      target.attributes.fill.value = 'transparent'
-    } 
-    this.setState({
-      prevState: null,
-      pointer: 0,
-      currentState: 0
-    }, this.updateCurrentState)
-  }
-
   renderCommandGroup() {
+    const { isPlaying, pointer } = this.state
+
     return (
       <div>
         <div className='display'>
@@ -137,13 +179,26 @@ class FiniteState2 extends Component {
             className='btn btn-reset'
             onClick={this.resetState}
           >
-            Reset
+            Back to Initial State
           </button>
           <button 
             className='btn'
             onClick={this.nextState}
           >
             Next
+          </button>
+          <button 
+            className='btn btn-auto-play'
+            onClick={this.autoPlayState}
+          >
+            {
+              isPlaying ? 'Playing...' 
+            : 
+              pointer === 0 ?
+              'Auto Play'
+              :
+              'Start Again'
+            }
           </button>
         </div>
       </div>

@@ -6,17 +6,27 @@ class Index extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      inputSting: []
+      inputSting: [],
+      fReset: null
     }
 
     this.renderCommandGroup = this.renderCommandGroup.bind(this)
     this.__onChangeInputString = this.__onChangeInputString.bind(this)
+    this.setFReset = this.setFReset.bind(this)
   }
 
   __onChangeInputString(value = []) {
     this.setState({
       inputSting: value
     })
+  }
+
+  setFReset(func) {
+    if(typeof(func) === 'function') {
+      this.setState({
+        fReset: func
+      })
+    }
   }
 
   printState() {
@@ -43,7 +53,7 @@ class Index extends Component {
   }
 
   render() {
-    const { inputSting } = this.state
+    const { inputSting, fReset } = this.state
 
     return(
       <div className='index-page'>
@@ -51,8 +61,8 @@ class Index extends Component {
           <h1>{`** open in Chrome for best look **`}</h1>
         </div>
         {this.renderCommandGroup()}
-        <VendorMachine onChange={this.__onChangeInputString}/>
-        <FiniteState input={inputSting}/>
+        <VendorMachine onChange={this.__onChangeInputString} reset={fReset}/>
+        <FiniteState input={inputSting} fReset={this.setFReset}/>
       </div>
     )
   }
