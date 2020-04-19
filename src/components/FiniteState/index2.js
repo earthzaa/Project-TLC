@@ -75,7 +75,7 @@ class FiniteState2 extends Component {
     const { pointer, currentState, isPlaying } = this.state
     const maxPointer = input.length
 
-    if(currentState === 11 || (!isPlaying && currentState !== 0)) {
+    if(currentState === 11 || (!isPlaying && currentState !== 0) || pointer !== 0) {
       this.resetState()
     }
     else {
@@ -227,7 +227,7 @@ class FiniteState2 extends Component {
               currentState === 0 && pointer === 0 ?
               'Auto Play'
               :
-              'Start Again'
+              'Back to Start'
             }
           </button>
           <button 
