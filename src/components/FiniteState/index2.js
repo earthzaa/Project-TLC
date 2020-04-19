@@ -149,8 +149,9 @@ class FiniteState2 extends Component {
   printState() {
     const { input } = this.props
     const hasSubmit = input.find((item) => item.toLowerCase() === 'submit')
+    const isResetStr = input.length > 0 ? input[0].toLowerCase() === 'reset' : true
 
-    if(!hasSubmit) return ''
+    if(!hasSubmit && !isResetStr) return ''
     else return input.map((item, index) => this.translateToDFA(item) + (index < input.length - 1 ? ', ' : ''))
   }
 
