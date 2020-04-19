@@ -77,8 +77,9 @@ class FiniteState2 extends Component {
     }
     else {
       this.setState({
-        isPlaying: true
-      }, () => this.stepAutoPlay(pointer, maxPointer))
+        isPlaying: true,
+        pointer: 0
+      }, () => this.stepAutoPlay(0, maxPointer))
     }
   }
 
@@ -176,7 +177,7 @@ class FiniteState2 extends Component {
   }
 
   renderCommandGroup() {
-    const { isPlaying, currentState, isStop } = this.state
+    const { isPlaying, currentState, isStop, pointer } = this.state
 
     return (
       <div>
@@ -199,7 +200,7 @@ class FiniteState2 extends Component {
               isPlaying ? 
               'Playing...' 
             : 
-              currentState === 0 ?
+              currentState === 0 && pointer === 0 ?
               'Auto Play'
               :
               'Start Again'
