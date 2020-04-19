@@ -239,7 +239,7 @@ class FiniteState2 extends Component {
         </div>
         <div className={`autoplay-time ${(isPlaying || isStop) && 'disable'}`}>
           <div>
-            <h4>Duration on State</h4>
+            <h4>Autoplay Duration on State</h4>
           </div>
           <input 
             className='w-100' 
