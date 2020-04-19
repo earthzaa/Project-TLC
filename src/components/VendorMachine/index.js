@@ -62,18 +62,18 @@ class VendorMachine extends Component {
   }
 
   validateMenu() {
-    const { selected, receiveMoney, totalPrice } = this.state
+    const { selected, receiveMoney, totalPrice, warning } = this.state
     const isEnough = receiveMoney >= totalPrice
     const isComplete = selected.filter((item) => item === '').length === 0
 
-    if(isComplete && isEnough) {
+    if(isComplete && isEnough && !warning) {
       this.setState({
         submit: true
       }, this.prepareRamen)
     }
     else {
       this.setState({
-        adviseText: !isEnough && isComplete ? 'Money is not enough' : 'Following Guide !!',
+        adviseText: !isEnough && (isComplete || warning) ? 'Money is not enough' : 'Following Guide !!',
         warning: true
       }, this.resetWarning)
     }
@@ -128,6 +128,9 @@ class VendorMachine extends Component {
   }
 
   onSelectedMenu(event) {
+    const { warning } = this.state
+    if(warning) return 
+
     const { id } = event.target
     let { selected } = this.state
     const group = this.findGroup(id)
@@ -206,6 +209,9 @@ class VendorMachine extends Component {
   }
 
   __onChangeMoney(price = 0) {
+    const { warning } = this.state
+    if(warning) return 
+
     let { receiveMoney } = this.state
 
     receiveMoney += price
