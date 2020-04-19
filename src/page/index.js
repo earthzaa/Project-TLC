@@ -62,7 +62,7 @@ class Index extends Component {
         </div>
         {this.renderCommandGroup()}
         <VendorMachine onChange={this.__onChangeInputString} reset={fReset}/>
-        <FiniteState input={inputSting} fReset={this.setFReset}/>
+        <FiniteState input={inputSting} fReset={this.setFReset} onChange={this.__onChangeInputString}/>
       </div>
     )
   }

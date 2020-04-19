@@ -10,7 +10,8 @@ class FiniteState2 extends Component {
       pointer: 0,
       currentState: 0,
       isPlaying: false,
-      isStop: false
+      isStop: false,
+      autoPlayTime: 1000
     }
 
     this.updateCurrentState = this.updateCurrentState.bind(this)
@@ -21,6 +22,8 @@ class FiniteState2 extends Component {
     this.translateToState = this.translateToState.bind(this)
     this.autoPlayState = this.autoPlayState.bind(this)
     this.hasStop = this.hasStop.bind(this)
+    this.clearInput = this.clearInput.bind(this)
+    this.__onChangeAutoPlayTime = this.__onChangeAutoPlayTime.bind(this)
   }
 
   componentDidMount() {
@@ -85,6 +88,8 @@ class FiniteState2 extends Component {
 
   stepAutoPlay(pointer = 0, maxPointer = 1) {
     if(pointer < maxPointer) {
+      const { autoPlayTime } = this.state
+
       setTimeout(() => {
         const { input } = this.props
         const { isStop } = this.state
@@ -94,7 +99,7 @@ class FiniteState2 extends Component {
           this.stepAutoPlay(pointer + 1, maxPointer)
         }
         else this.resetState()
-      }, 3500)
+      }, autoPlayTime)
     }
     else {
       this.setState({
@@ -122,9 +127,22 @@ class FiniteState2 extends Component {
     }, this.updateCurrentState)
   }
 
+  clearInput() {
+    this.props.onChange([])
+    this.resetState()
+  }
+
   hasStop() {
     this.setState({
       isStop: true
+    })
+  }
+
+  __onChangeAutoPlayTime(event) {
+    const { value } = event.target
+
+    this.setState({
+      autoPlayTime: value
     })
   }
 
@@ -177,7 +195,7 @@ class FiniteState2 extends Component {
   }
 
   renderCommandGroup() {
-    const { isPlaying, currentState, isStop, pointer } = this.state
+    const { isPlaying, currentState, isStop, pointer, autoPlayTime } = this.state
 
     return (
       <div>
@@ -192,6 +210,12 @@ class FiniteState2 extends Component {
           </div>
         </div>
         <div className='btn-group'>
+          <button
+            className={isPlaying || isStop ? 'd-none' : 'btn btn-reset'}
+            onClick={this.clearInput}
+          >
+            Reset Input
+          </button>
           <button 
             className='btn btn-auto-play'
             onClick={!isPlaying ? this.autoPlayState : ''}
@@ -212,6 +236,20 @@ class FiniteState2 extends Component {
           >
             { isPlaying ? isStop ? 'Wait...' : 'Stop' : 'Next'}
           </button>
+        </div>
+        <div className={`autoplay-time ${(isPlaying || isStop) && 'disable'}`}>
+          <div>
+            <h4>Duration on State</h4>
+          </div>
+          <input 
+            className='w-100' 
+            type='range' 
+            min={1000} 
+            max={10000} 
+            onChange={this.__onChangeAutoPlayTime}
+            disabled={isPlaying || isStop}
+          />
+          <div>{`${autoPlayTime} milliseconds (${autoPlayTime/1000} s)`}</div>
         </div>
       </div>
     )
@@ -281,7 +319,7 @@ class FiniteState2 extends Component {
     return(
       <svg
         className='state-display'
-        width={1300}
+        width={1250}
         height={500}
       >
         {this.renderLegend()}
